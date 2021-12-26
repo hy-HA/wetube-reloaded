@@ -1,7 +1,7 @@
 / -> Home
 /join -> Join
 /login -> Login
-/serch -> Search
+/search -> Search
 
 /users/:id -> See User
 /users/logout -> Log Out
