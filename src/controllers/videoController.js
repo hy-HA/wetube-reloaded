@@ -1,10 +1,7 @@
 
 //1.라우터 쓰기 > 2.라우터 만들기 >3.라우터 첫페이지 만들기-컨트롤러(o)
-export const trending = (req,res) => res.send("Home Page Videos");
-export const see = (req,res) => {
-    console.log(req.params);
-    return res.send(`Watch Video #${req.params.id}`);
-}
+export const trending = (req,res) => res.render("home");
+export const see = (req,res) => res.render("watch");
 export const edit = (req,res) => {
     console.log(req.params);
     return res.send("Edit");
