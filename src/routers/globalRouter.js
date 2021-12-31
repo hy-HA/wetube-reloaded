@@ -9,7 +9,6 @@ const globalRouter = express.Router();
 globalRouter.get("/", trending);
 globalRouter.get("/join", join);
 globalRouter.get("/login", login);
-globalRouter.get("/search", search);
 
 //1.라우터 쓰기 > 2.라우터 만들기 >3.라우터 페이지 만들기>4.expoert하기
 export default globalRouter;
