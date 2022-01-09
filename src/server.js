@@ -1,3 +1,4 @@
+import "./db";
 import express from "express";
 //const express = require("express"); 코드의 최신버전 
 import morgan from "morgan";
