@@ -1,9 +1,20 @@
 import Video from "../models/Video"
 
+/*콜백 방식
+Video.find({},(error, videos) => {
+    if(error){
+        return res.render("server-error")
+    }
+    return res.render("home", { pageTitle: "Home", videos });
+});
+*/
+
 //1.라우터 쓰기 > 2.라우터 만들기 >3.라우터 첫페이지 만들기-컨트롤러(o)
-export const home = (req,res) => {
-    Video.find({},);
-    return res.render("home", {pageTitle : "home"});
+//promise 방식
+export const home = async(req,res) => {    
+    const videos = await Video.find({});
+    console.log(videos);
+    return res.render("home", {pageTitle : "Home", videos});
 };
 
 export const watch = (req,res) => {
@@ -25,10 +36,19 @@ export const postEdit = (req,res) => {
 export const getUpload = (req,res) => {
     return res.render("upload", {pageTitle : "Upload Video"});
 };
-export const postUpload = (req,res) => {
+export const postUpload = async (req,res) => {
     //console.log(req.body);
     //here we will add a video to the videos array.
-    const {title} = req.body;
-    videos.push(newVideo);
+    const {title,descripton,hashtags} = req.body;
+    await Video.create({
+        title: title,
+        descripton: descripton,
+        createdAt: Date.now(),
+        hashtags: hashtags.split(",").map((word)=> `#${word}`),
+        meta: {
+            views: 0,
+            rating: 0,
+        },
+    });
     return res.redirect("/");
 };
