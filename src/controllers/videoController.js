@@ -17,10 +17,11 @@ export const home = async(req,res) => {
     return res.render("home", {pageTitle : "Home", videos});
 };
 
-export const watch = (req,res) => {
+export const watch = async (req,res) => {
     const id = req.params.id;
-    console.log("show video", id);
-    return res.render("watch", {pageTitle : `Watching`});
+    const video = await Video.findById(id);
+    console.log(video);
+    return res.render("watch", {pageTitle : video.title, video});
 };
 
 export const getEdit = (req,res) => {
@@ -39,16 +40,18 @@ export const getUpload = (req,res) => {
 export const postUpload = async (req,res) => {
     //console.log(req.body);
     //here we will add a video to the videos array.
-    const {title,descripton,hashtags} = req.body;
-    await Video.create({
-        title: title,
-        descripton: descripton,
-        createdAt: Date.now(),
-        hashtags: hashtags.split(",").map((word)=> `#${word}`),
-        meta: {
-            views: 0,
-            rating: 0,
-        },
-    });
-    return res.redirect("/");
+    const {title,description,hashtags} = req.body;
+    try {
+        await Video.create({
+            title: title,
+            description: description,
+            hashtags: hashtags.split(",").map((word)=> `#${word}`),
+        });
+        return res.redirect("/");
+    } catch (error) {
+        return res.render("upload", {
+            pageTitle : "Upload Video",
+            errorMessage: error._message,
+        });
+    }
 };
