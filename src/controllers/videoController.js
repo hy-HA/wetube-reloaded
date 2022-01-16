@@ -13,7 +13,7 @@ Video.find({},(error, videos) => {
 //promise 방식
 export const home = async(req,res) => {    
     const videos = await Video.find({});
-    console.log(videos);
+    //console.log(videos);
     return res.render("home", {pageTitle : "Home", videos});
 };
 
@@ -63,9 +63,16 @@ export const postUpload = async (req,res) => {
         });
         return res.redirect("/");
     } catch (error) {
+        //console.log(error);
         return res.render("upload", {
             pageTitle : "Upload Video",
             errorMessage: error._message,
         });
     }
+};
+
+export const deleteVideo = async (req,res) => {
+    const { id } = req.params;
+    await Video.findByIdAndDelete(id);
+    return res.redirect("/");
 };

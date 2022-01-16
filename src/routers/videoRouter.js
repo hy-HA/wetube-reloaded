@@ -1,5 +1,5 @@
 import express from "express";
-import { watch, getEdit, postEdit, getUpload, postUpload} from "../controllers/videoController";
+import { watch, getEdit, postEdit, getUpload, postUpload,deleteVideo} from "../controllers/videoController";
 
 //1.라우터 쓰기 > 2.라우터 만들기(o) >3.라우터 페이지 만들기
 const videoRouter = express.Router();
@@ -11,6 +11,7 @@ videoRouter.get("/:id([0-9a-f]{24})", watch);
 //videoRouter.get("/:id(\\d+)/edit", getEdit);
 //videoRouter.post("/:id(\\d+)/edit", postEdit);
 videoRouter.route("/:id([0-9a-f]{24})/edit").get(getEdit).post(postEdit);
+videoRouter.route("/:id([0-9a-f]{24})/delete").get(deleteVideo);
 videoRouter.route("/upload").get(getUpload).post(postUpload);
 
 //1.라우터 쓰기 > 2.라우터 만들기(o) >3.라우터 페이지 만들기>4.export하기
