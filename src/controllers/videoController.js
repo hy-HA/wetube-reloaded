@@ -38,13 +38,13 @@ export const postEdit = async (req,res) => {
     const {id} = req.params;
     //request.body에서 타이틀,설명,해시태그 가져오기
     const {title,description,hashtags} = req.body;
-    const video = await Video.exist({ _id: id });
+    const video = await Video.exists({ _id: id });
     if (!video){
         return res.render("404", {pageTitle: "Video not found."});
     }
     //console.log(req.body);
     await Video.findByIdAndUpdate(id, {
-        title, description, hashtags:hashtags.split(",").map((word)=> word.startsWith('#') ? word : `#${word}`),
+        title, description, hashtags: Video.formatHashtags(hashtags),
     });
     return res.redirect(`/videos/${id}`);
 };
@@ -59,7 +59,7 @@ export const postUpload = async (req,res) => {
         await Video.create({
             title: title,
             description: description,
-            hashtags: video.hashtags = hashtags.split(",").map((word)=> word.startsWith('#') ? word : `#${word}`),
+            hashtags:Video.formatHashtags(hashtags),
         });
         return res.redirect("/");
     } catch (error) {
