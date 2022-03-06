@@ -87,14 +87,15 @@ export const finishGithubLogin = async (req, res) => {
     };
     const params = new URLSearchParams(config).toString();
     const finalUrl = `${baseUrl}?${params}`;
-    const tokenReQuest = await (await fetch(finalUrl, {
+    const tokenRequest = await (
+        await fetch(finalUrl, {
         method: "POST",
         headers: {
             Accept: "application/json",
         },
     })).json();  //await 안에 await
-    if ("access_token" in tokenReQuest) {
-        const {access_token} = tokenReQuest; //access토큰을 JSON으로부터 꺼집어내기
+    if ("access_token" in tokenRequest) {
+        const {access_token} = tokenRequest; //access토큰을 JSON으로부터 꺼집어내기
         const apiUrl = "https://api.github.com";
         const userData = await (
             // fetch 요청
@@ -106,17 +107,38 @@ export const finishGithubLogin = async (req, res) => {
         //fetch가 돌아오면 해당 fetch의 JSON을 받음. 
         ).json();
         console.log(userData);
-        const emailData = await ( await fetch(`${apiUrl}/user/emails`, {
+        const emailData = await ( 
+            await fetch(`${apiUrl}/user/emails`, {
             headers: {
                 Authorization: `token ${access_token}`,
             },
         })
         ).json();
-        const email = emailData.find(
+        console.log(emailData);
+        const emailObj = emailData.find(
             (email) => email.primary === true && email.verified ===true
         );
-        if (!email) {
+        if (!emailObj) {
             return res.redirect("/login");
+        }
+        const existingUser = await User.findOne({ email: emailObj.email });
+        if (existingUser) {
+            req.session.loggedIn = true;
+            req.session.user = existingUser;
+            return res.redirect("/");
+        } else {
+            // create an account
+            const user = await User.create({
+                name:userData.name? userData.name:"Unknown",
+                username:userData.login,
+                email:emailObj.email,
+                password:"",
+                socialOnly: true,
+                location:userData.location,
+            });
+            req.session.loggedIn = true;
+            req.session.user = user;
+            return res.redirect("/");
         }
     } else {
         return res.redirect("/login"); 
