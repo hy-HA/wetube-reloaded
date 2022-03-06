@@ -1,5 +1,6 @@
 //1.라우터 쓰기 > 2.라우터 만들기 >3.라우터 첫페이지 만들기-컨트롤러(o)
 import User from "../models/User";
+import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
 export const getJoin = (req,res) => res.render("join", {pageTitle: "Join"});
@@ -82,18 +83,32 @@ export const finishGithubLogin = async (req, res) => {
     const config = {
         client_id: process.env.GH_CLIENT,
         client_secret: process.env.GH_SECRET,
-        code: req.query.code
+        code: req.query.code,
     };
     const params = new URLSearchParams(config).toString();
-    const finalUrl = `${baseUrl}?${params}`
-    const data = await fetch(finalUrl, {
+    const finalUrl = `${baseUrl}?${params}`;
+    const tokenReQuest = await (await fetch(finalUrl, {
         method: "POST",
         headers: {
             Accept: "application/json",
         },
-    });
-    const json = await data.json();
-    console.log(json);
+    })).json();  //await 안에 await
+    if ("access_token" in tokenReQuest) {
+        const {access_token} = tokenReQuest; //access토큰을 JSON으로부터 꺼집어내기
+        const userRequest = await (
+            // fetch 요청
+            await fetch("https://api.github.com/user", {
+                headers: {  //헤더에 authorization보내기
+                Authorization: `token ${access_token}`
+                },
+            })
+        //fetch가 돌아오면 해당 fetch의 JSON을 받음. 
+        ).json();
+        console.log(userRequest);
+    } else {
+        return res.redirect("/login"); 
+        // 나중에 notification을 보내면서 redirect하도록 수정예정
+    }
 };
 
 export const edit = (req,res) => res.send("Edit User");
