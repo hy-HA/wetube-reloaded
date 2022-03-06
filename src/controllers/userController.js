@@ -95,16 +95,29 @@ export const finishGithubLogin = async (req, res) => {
     })).json();  //await 안에 await
     if ("access_token" in tokenReQuest) {
         const {access_token} = tokenReQuest; //access토큰을 JSON으로부터 꺼집어내기
-        const userRequest = await (
+        const apiUrl = "https://api.github.com";
+        const userData = await (
             // fetch 요청
-            await fetch("https://api.github.com/user", {
+            await fetch(`${apiUrl}/user`, {
                 headers: {  //헤더에 authorization보내기
-                Authorization: `token ${access_token}`
+                    Authorization: `token ${access_token}`,
                 },
             })
         //fetch가 돌아오면 해당 fetch의 JSON을 받음. 
         ).json();
-        console.log(userRequest);
+        console.log(userData);
+        const emailData = await ( await fetch(`${apiUrl}/user/emails`, {
+            headers: {
+                Authorization: `token ${access_token}`,
+            },
+        })
+        ).json();
+        const email = emailData.find(
+            (email) => email.primary === true && email.verified ===true
+        );
+        if (!email) {
+            return res.redirect("/login");
+        }
     } else {
         return res.redirect("/login"); 
         // 나중에 notification을 보내면서 redirect하도록 수정예정
