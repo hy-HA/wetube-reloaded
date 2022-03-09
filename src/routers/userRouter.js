@@ -7,7 +7,6 @@ const userRouter = express.Router();
 //1.라우터 쓰기 > 2.라우터 만들기 >3.라우터 페이지 만들기-라우터(o)
 userRouter.get("/logout",logout);
 userRouter.get("/edit",edit);
-userRouter.get("/remove", remove);
 userRouter.get("/github/start", startGithubLogin);
 userRouter.get("/github/finish", finishGithubLogin);
 userRouter.get(":id",see);
