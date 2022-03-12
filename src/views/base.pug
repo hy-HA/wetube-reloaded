@@ -9,9 +9,6 @@ html(lang="ko")
             nav 
                 ul 
                     li 
-                        a(href="/videos/upload") Upload Video
-
-                    li 
                         a(href="/") Home
 
                     if loggedIn 
@@ -21,6 +18,8 @@ html(lang="ko")
                             a(href="/users/logout") Log Out
                         li  
                             a(href="my-profile") #{loggedInUser.name}의 ProFile
+                        li 
+                            a(href="/videos/upload") Upload Video
                     else
                         li 
                             a(href="/login") Login
