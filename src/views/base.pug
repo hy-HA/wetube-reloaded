@@ -13,8 +13,7 @@ html(lang="ko")
 
                     li 
                         a(href="/") Home
-                    li 
-                        a(href="/login") Login
+
                     if loggedIn 
                         li 
                             a(href="/users/edit") Edit Profile
@@ -23,6 +22,9 @@ html(lang="ko")
                         li  
                             a(href="my-profile") #{loggedInUser.name}의 ProFile
                     else
+                        li 
+                            a(href="/login") Login
+
                         li 
                             a(href="/search") Search
                         li 
