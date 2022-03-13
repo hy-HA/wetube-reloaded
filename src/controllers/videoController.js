@@ -54,11 +54,13 @@ export const getUpload = (req,res) => {
 export const postUpload = async (req,res) => {
     //console.log(req.body);
     //here we will add a video to the videos array.
+    const {path: fileUrl} = req.file;  //브라우저에서 업로드한 파일(의 경로)을 받기_multer는 req.file을 제공.
     const {title,description,hashtags} = req.body;
     try {
         await Video.create({
             title: title,
             description: description,
+            fileUrl,  //브라우저에서 업로드한 파일을 받아서 경로를 설정. 
             hashtags:Video.formatHashtags(hashtags),
         });
         return res.redirect("/");

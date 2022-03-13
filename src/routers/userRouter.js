@@ -2,7 +2,7 @@ import express from "express";
 import {
     getEdit, postEdit, remove, logout, see, startGithubLogin, finishGithubLogin, getChangePassword, postChangePassword
 } from "../controllers/userController";
-import { protectorMiddleware, publicOnlyMiddleware, uploadFiles } from "../middlewares";
+import { protectorMiddleware, publicOnlyMiddleware, avatarUpload } from "../middlewares";
 
 
 //1.라우터 쓰기 > 2.라우터 만들기(o) >3.라우터 페이지 만들기
@@ -13,7 +13,7 @@ userRouter
     .route("/edit")
     .all(protectorMiddleware)
     .get(getEdit)
-    .post(uploadFiles.single("avatar"), postEdit);
+    .post(avatarUpload.single("avatar"), postEdit);
 userRouter
 .route("/change-password")
 .all(protectorMiddleware)
