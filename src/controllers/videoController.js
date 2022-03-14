@@ -1,3 +1,4 @@
+import User from "../models/User";
 import Video from "../models/Video"
 
 /*콜백 방식
@@ -20,10 +21,12 @@ export const home = async(req,res) => {
 export const watch = async (req,res) => {
     const id = req.params.id;
     const video = await Video.findById(id);
+    //console.log(video);
+    const owner = await User.findById(video.owner)
     if (!video){
         return res.status(404).render("404", {pageTitle: "Video not found."});
     }
-    return res.render("watch", {pageTitle : video.title, video});    
+    return res.render("watch", {pageTitle : video.title, video, owner });    
 };
 
 export const getEdit = async (req,res) => {
@@ -34,6 +37,7 @@ export const getEdit = async (req,res) => {
     }
     res.render("edit", {pageTitle : `Edit ${video.title}`, video});
 };
+
 export const postEdit = async (req,res) => {
     const {id} = req.params;
     //request.body에서 타이틀,설명,해시태그 가져오기
@@ -48,12 +52,15 @@ export const postEdit = async (req,res) => {
     });
     return res.redirect(`/videos/${id}`);
 };
+
 export const getUpload = (req,res) => {
     return res.render("upload", {pageTitle : "Upload Video"});
 };
 export const postUpload = async (req,res) => {
     //console.log(req.body);
-    //here we will add a video to the videos array.
+    const { 
+        user: {_id},
+    } = req.session;
     const {path: fileUrl} = req.file;  //브라우저에서 업로드한 파일(의 경로)을 받기_multer는 req.file을 제공.
     const {title,description,hashtags} = req.body;
     try {
@@ -61,6 +68,7 @@ export const postUpload = async (req,res) => {
             title: title,
             description: description,
             fileUrl,  //브라우저에서 업로드한 파일을 받아서 경로를 설정. 
+            owner: _id, 
             hashtags:Video.formatHashtags(hashtags),
         });
         return res.redirect("/");
