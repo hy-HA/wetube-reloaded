@@ -1,3 +1,4 @@
+import req from "express/lib/request";
 import User from "../models/User";
 import Video from "../models/Video";
 
@@ -31,20 +32,33 @@ export const watch = async (req,res) => {
 
 export const getEdit = async (req,res) => {
     const id = req.params.id;
+    const {
+        user: {_id},
+    } = req.session;
     const video = await Video.findById(id);
     if (!video){
         return res.render("404", {pageTitle: "Video not found."});
+    }
+    console.log(typeof video.owner, typeof _id);
+    if (String(video.owner) !== String(_id)) {
+        return res.status(403).redirect("/");
     }
     res.render("edit", {pageTitle : `Edit ${video.title}`, video});
 };
 
 export const postEdit = async (req,res) => {
     const {id} = req.params;
+    const {
+        user: {_id},
+    } = req.session;
     //request.body에서 타이틀,설명,해시태그 가져오기
     const {title,description,hashtags} = req.body;
     const video = await Video.exists({ _id: id });
     if (!video){
         return res.render("404", {pageTitle: "Video not found."});
+    }
+    if (String(video.owner) !== String(_id)) {
+        return res.status(403).redirect("/");
     }
     //console.log(req.body);
     await Video.findByIdAndUpdate(id, {
@@ -64,13 +78,16 @@ export const postUpload = async (req,res) => {
     const {path: fileUrl} = req.file;  //브라우저에서 업로드한 파일(의 경로)을 받기_multer는 req.file을 제공.
     const {title,description,hashtags} = req.body;
     try {
-        await Video.create({
+        const newVideo = await Video.create({
             title: title,
             description: description,
             fileUrl,  //브라우저에서 업로드한 파일을 받아서 경로를 설정. 
             owner: _id, 
             hashtags:Video.formatHashtags(hashtags),
         });
+        const user = await User.findById(_id);
+        user.videos.push(newVideo._id);
+        user.save();
         return res.redirect("/");
     } catch (error) {
         //console.log(error);
@@ -83,6 +100,16 @@ export const postUpload = async (req,res) => {
 
 export const deleteVideo = async (req,res) => {
     const { id } = req.params;
+    const {
+        user: {_id},
+    } = req.session;
+    const video = await Video.findById(id);
+    if (!video){
+        return res.render("404", {pageTitle: "Video not found."});
+    }
+    if (String(video.owner) !== String(_id)) {
+        return res.status(403).redirect("/");
+    }
     await Video.findByIdAndDelete(id);
     return res.redirect("/");
 };
