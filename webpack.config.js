@@ -1,3 +1,5 @@
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 //path import
 const path = require("path");
 
@@ -10,12 +12,15 @@ const path = require("path");
 module.exports = {
     //파일의 경로를 입력
     entry : "./src/client/js/main.js",
+    plugins: [new MiniCssExtractPlugin({
+        filename: "css/styles.css",
+    })],
     mode: 'development',
     output : {
         //파일 이름 지정
-        filename: "main.js",
+        filename: "js/main.js",
         //파일이 저장될 위치 지정(절대경로로 지정해야함)
-        path: path.resolve(__dirname, "assets", "js"),
+        path: path.resolve(__dirname, "assets"),
     },
     module: {
         rules: [
@@ -30,7 +35,7 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: ["style-loader", "css-loader", "sass-loader"],
+                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
             }
         ],
     },
