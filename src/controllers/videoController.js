@@ -1,6 +1,7 @@
 import req from "express/lib/request";
 import User from "../models/User";
 import Video from "../models/Video";
+import apiRouter from "../routers/apiRouter";
 
 /*콜백 방식
 Video.find({},(error, videos) => {
@@ -128,4 +129,15 @@ export const search = async (req,res) => {
         }).populate("owner");
     }
     return res.render("search", {pageTitle: "Search", videos});
+}
+
+export const registerView = async (req,res) => {
+    const {id} = req.params;
+    const video = await Video.findById(id);
+    if(!video) {
+        return res.status(404);
+    }
+    video.meta.views = video.meta.views + 1;
+    await video.save();
+    return res.status(200);
 }
