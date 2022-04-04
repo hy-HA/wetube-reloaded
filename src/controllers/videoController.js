@@ -1,7 +1,7 @@
 import req from "express/lib/request";
 import User from "../models/User";
 import Video from "../models/Video";
-import apiRouter from "../routers/apiRouter";
+
 
 /*콜백 방식
 Video.find({},(error, videos) => {
