@@ -14,12 +14,13 @@ module.exports = {
     entry : {
         main: "./src/client/js/main.js",
         videoPlayer: "./src/client/js/videoPlayer.js",
+        recoder: "./src/client/js/recoder.js",
     },
     mode: 'development',
     watch: true,
     plugins: [new MiniCssExtractPlugin({
         filename: "css/styles.css",
-    })],
+    })], 
     output : {
         //파일 이름 지정
         filename: "js/[name].js",
