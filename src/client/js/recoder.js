@@ -3,10 +3,16 @@ const video = document.getElementById("preview");
 
 let stream;
 let recoder;
+let videoFile;
 
-const handleDownload = () => {};
+const handleDownload = () => {
+    const a = document.createElement("a");
+    a.href = videoFile;
+    a.download = "MyRecording.webm";
+    document.body.appendChild(a);
+    a.click();
+};
 
-//버튼이 하나만 있기 때문에 이벤트 리스너를 삭제&생성하는 것. 
 const handleStop = () => {
     startBtn.innerText = "Download Recording";
     startBtn.removeEventListener("click", handleStop);
@@ -18,9 +24,9 @@ const handleStart = () => {
     startBtn.innerText = "Stop Recording";
     startBtn.removeEventListener("click", handleStart);
     startBtn.addEventListener("click", handleStop);
-    recoder = new MediaRecorder(stream);
+    recoder = new MediaRecorder(stream, {mimeType: "video/webm"});
     recoder.ondataavailable = (event) => {
-        const videoFile = URL.createObjectURL(event.data);
+        videoFile = URL.createObjectURL(event.data);
         //console.log(videoFile); //파일을 가리키고 있는 URL이 출력됨
         video.srcObject = null;
         video.src = videoFile;
