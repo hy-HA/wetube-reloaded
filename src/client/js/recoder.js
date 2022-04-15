@@ -1,5 +1,6 @@
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
-import { async } from "regenerator-runtime";
+corePath: "https://unpkg.com/@ffmpeg/core@0.8.5/dist/ffmpeg-core.js"
+
 const startBtn = document.getElementById("startBtn");
 const video = document.getElementById("preview");
 
@@ -15,9 +16,17 @@ const handleDownload = async () => {
     ffmpeg.FS("writeFile", "recording.webm", await fetchFile(videoFile));
     await ffmpeg.run("-i", "recording.webm", "-r", "60", "output.mp4"); 
 
+    const mp4File = ffmpeg.FS("readFile", "output.mp4");
+    //console.log(mp4File);
+    //console.log(mp4File.buffer);
+
+    const mp4Blob = new Blob([mp4File.buffer], {type: "video/mp4"});
+    const mp4Url = URL.createObjectURL(mp4Blob);
+
     const a = document.createElement("a");
-    a.href = videoFile;
-    a.download = "MyRecording.webm";
+    //a.href = videoFile;
+    a.href = mp4Url;
+    a.download = "MyRecording.mp4";
     document.body.appendChild(a);
     a.click();
 };
@@ -58,7 +67,7 @@ const handleStart = () => {
 const init = async () => {
     // let인 stream을 업데이트.
     stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
+        audio: false,
         video: true,
     });
     //console.log(stream);
