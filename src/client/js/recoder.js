@@ -63,17 +63,19 @@ const handleDownload = async () => {
     actionBtn.addEventListener("click", handleStart);
 };
 
-const handleStop = () => {
-    actionBtn.innerText = "Download Recording";
-    actionBtn.removeEventListener("click", handleStop);
-    actionBtn.addEventListener("click", handleDownload);
-    recoder.stop();
-};
+//const handleStop = () => {
+//    actionBtn.innerText = "Download Recording";
+//    actionBtn.removeEventListener("click", handleStop);
+//    actionBtn.addEventListener("click", handleDownload);
+//    recoder.stop();
+//};
 
 const handleStart = () => {
-    actionBtn.innerText = "Stop Recording";
+    //actionBtn.innerText = "Stop Recording";
+    actionBtn.innerText = "Recording";
+    actionBtn.disabled = true;
     actionBtn.removeEventListener("click", handleStart);
-    actionBtn.addEventListener("click", handleStop);
+    //actionBtn.addEventListener("click", handleStop);
     recoder = new MediaRecorder(stream, {mimeType: "video/webm"});
     recoder.ondataavailable = (event) => {
         videoFile = URL.createObjectURL(event.data);
@@ -85,7 +87,10 @@ const handleStart = () => {
         //console.log("recording done")
         //console.log(e);
         //console.log(event.data); //녹화된 비디오는 event.data에 있음. 
-    }
+        actionBtn.innerText = "Download";
+        actionBtn.disabled = false;
+        actionBtn.addEventListener("click",handleDownload);
+    };
     //console.log(recoder);
     recoder.start(); // 녹화 시작
     //console.log(recoder);
@@ -94,13 +99,19 @@ const handleStart = () => {
     //}, 10000); 
     //10초 후 녹화 종료 시 dataavailable 이벤트가 발생.
     //그 이벤트를 잡으려면 ondataavailable이라는 handler 사용. 
+    setTimeout(()=>{
+        recoder.stop();
+    }, 5000);
 };
 
 const init = async () => {
     // let인 stream을 업데이트.
     stream = await navigator.mediaDevices.getUserMedia({
         audio: false,
-        video: true,
+        video: {
+            width: 1024,
+            height: 576,
+        },
     });
     //console.log(stream);
     video.srcObject = stream;
