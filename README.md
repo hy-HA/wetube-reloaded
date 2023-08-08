@@ -1,5 +1,11 @@
 ## NodeJS로 서버 구축해보기
 
+## 시연 영상
+<p align="center">
+  <img src="![wetube1](https://github.com/hy-HA/wetube-reloaded/assets/73115727/1407b880-f1b9-4db7-92be-3198105395ca)
+">
+</p>
+
 ## 구현기능
 ### 홈화면
 - 회원가입, 로그인
