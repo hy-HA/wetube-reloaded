@@ -2,8 +2,7 @@
 
 ## 시연 영상
 <p align="center">
-  <img src="![wetube1](https://github.com/hy-HA/wetube-reloaded/assets/73115727/1407b880-f1b9-4db7-92be-3198105395ca)
-">
+  <img src="https://github.com/hy-HA/wetube-reloaded/issues/1#issue-1841590009">
 </p>
 
 ## 구현기능
