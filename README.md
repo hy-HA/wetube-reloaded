@@ -1,9 +1,7 @@
 ## NodeJS로 서버 구축해보기
 
 ## 시연 영상
-<p align="center">
-  <img src="https://github.com/hy-HA/wetube-reloaded/issues/1#issue-1841590009">
-</p>
+https://i.imgur.com/EkOjIWX.mp4
 
 ## 구현기능
 ### 홈화면
