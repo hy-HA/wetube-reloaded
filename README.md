@@ -1,7 +1,7 @@
 ## NodeJS로 서버 구축해보기
 
 ## 시연 영상
-https://i.imgur.com/EkOjIWX.mp4
+![](https://i.imgur.com/EkOjIWX.mp4)
 
 ## 구현기능
 ### 홈화면
