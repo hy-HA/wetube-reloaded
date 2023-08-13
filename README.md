@@ -2,6 +2,7 @@
 
 ## 시연 영상
 ![](https://i.imgur.com/EkOjIWX.mp4)
+![](https://i.imgur.com/hnWSvbj.jpg)
 
 ## 구현기능
 ### 홈화면
